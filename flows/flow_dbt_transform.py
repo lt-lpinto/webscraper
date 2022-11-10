@@ -9,13 +9,13 @@ from prefect_gcp.credentials import GcpCredentials
 def flow_dbt_transform():
     gcp_credentials = GcpCredentials(service_account_file="./tf-test-365219-e68b028a905b.json")
     target_configs = BigQueryTargetConfigs(
-        #schema="schema",
-        #project="project",
-        credentials=credentials,
+        schema="webscraper",
+        project="tf-test-365219",
+        credentials=gcp_credentials,
     )
     dbt_cli_profile = DbtCliProfile(
         name="webscraper",
-        target="dev",
+        target="webscraper",
         target_configs=target_configs,
     )
 

@@ -1,0 +1,22 @@
+
+version: 2
+
+models:
+  - name: dev__products_match
+    description: "Simple Products Match"
+    columns:
+      - name: title
+        description: "Product Title"
+        tests:
+          - unique
+          - not_null
+      - name: price
+        description: "Product Price"
+        tests:
+          - not_null
+      - name: description
+        description: "Product Description"
+      - name: reviews
+        description: "Product Reviews"
+      - name: product_url
+        description: "Product Page Url"
