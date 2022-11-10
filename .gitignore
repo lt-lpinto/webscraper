@@ -1,5 +1,5 @@
 tf-test-365219-e68b028a905b.json
-
+credentials.env
 target/
 dbt_packages/
 logs/

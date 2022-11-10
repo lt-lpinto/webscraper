@@ -53,8 +53,8 @@ def create_bigquery_schema(gcp_credentials):
     return schema
 
 @flow
-def flow_get__allinone():
-    gcp_credentials = GcpCredentials(service_account_file="./tf-test-365219-e68b028a905b.json")
+def flow_get__allinone(service_account_file):
+    gcp_credentials = GcpCredentials(service_account_file=service_account_file)
     schema = create_bigquery_schema(gcp_credentials)
     result = bigquery_create_table(
         dataset=DATASET_NAME,
@@ -62,10 +62,6 @@ def flow_get__allinone():
         schema=schema,
         gcp_credentials=gcp_credentials
     )
-
-    #result = bigquery_query(
-    #    "TRUNCATE TABLE `{}`".format("tf-test-365219.webscraper.raw__allinone"), gcp_credentials, query_params=None
-    #)
 
     products = list()
     doc = get_request(ROOT_URL + ENDPOINT_URL)

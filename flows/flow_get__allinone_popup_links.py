@@ -1,5 +1,3 @@
-from prefect import flow, tasks
-
 import requests, sys
 from prefect import flow, task
 from bs4 import BeautifulSoup
@@ -16,18 +14,18 @@ ENDPOINT_URL = "/test-sites/e-commerce/allinone-popup-links"
 DATASET_NAME = "webscraper"
 TABLE_NAME = "raw__allinone_popup_links"
 
-@task
+@task(retries=3, retry_delay_seconds=60)
 def get_request(url):
     response = requests.get(url)
     if (response.status_code == 200):
         return BeautifulSoup(str(response.text), "html.parser")
     return None 
 
-@task
+@task(retries=3, retry_delay_seconds=60)
 def parse_request(doc, selector):
    return doc.select(selector)
 
-@task
+@task(retries=3, retry_delay_seconds=60)
 def parse_items(doc):
     products = list()
     items = doc.select('div.thumbnail')
@@ -56,8 +54,8 @@ def create_bigquery_schema(gcp_credentials):
     
 
 @flow
-def flow_get__allinone_popup_links():
-    gcp_credentials = GcpCredentials(service_account_file="./tf-test-365219-e68b028a905b.json")
+def flow_get__allinone_popup_links(service_account_file):
+    gcp_credentials = GcpCredentials(service_account_file=service_account_file)
     schema = create_bigquery_schema(gcp_credentials)
     result = bigquery_create_table(
         dataset=DATASET_NAME,
@@ -65,10 +63,6 @@ def flow_get__allinone_popup_links():
         schema=schema,
         gcp_credentials=gcp_credentials
     )
-
-    #result = bigquery_query(
-    #    "DELETE FROM `{}` WHERE true".format("tf-test-365219.webscraper.raw__allinone"), gcp_credentials, query_params=None
-    #)
 
     products = list()
     doc = get_request(ROOT_URL + ENDPOINT_URL)
