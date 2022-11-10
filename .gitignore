@@ -1,4 +1,8 @@
 tf-test-365219-e68b028a905b.json
+
+target/
+dbt_packages/
+logs/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
